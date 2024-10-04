@@ -1,3 +1,7 @@
+// Variables para el temporizador
+let timerInterval;
+let time = 0;
+
 // Registrar el Service Worker
 if ('Notification' in window && 'serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js')
@@ -26,9 +30,20 @@ navigator.serviceWorker.addEventListener('message', function(event) {
     historyList.innerHTML += `<li>${event.data.message}</li>`;
 });
 
-// Temporizador (opcional)
-let time = 0;
-setInterval(function() {
-    time++;
-    document.getElementById('timer').textContent = new Date(time * 1000).toISOString().substr(11, 8);
-}, 1000);
+// Función para iniciar el temporizador
+function startTimer() {
+    timerInterval = setInterval(function() {
+        time++;
+        document.getElementById('timer').textContent = new Date(time * 1000).toISOString().substr(11, 8);
+    }, 1000);
+}
+
+// Evento para el botón "Iniciar Sustentación"
+document.getElementById('start-btn').addEventListener('click', function() {
+    // Reiniciar el temporizador si ya está corriendo
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        time = 0;
+    }
+    startTimer();
+});
